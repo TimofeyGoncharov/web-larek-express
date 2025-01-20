@@ -21,6 +21,17 @@
   "rules": {
     "no-shadow": "off",
     "@typescript-eslint/no-shadow": "warn",
+    "no-console": "off",
+    "quotes": ["error", "double", { "avoidEscape": true }],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": false,
+        "optionalDependencies": false,
+        "peerDependencies": false,
+        "dependencies": false
+      }
+    ],
     "import/extensions": [
       "error",
       "ignorePackages",
