@@ -3,6 +3,7 @@ import { Error as MongooseError } from "mongoose";
 import Product from "../models/product";
 import { BadRequestError } from "../errors/bad-request-error";
 import { StatusCode } from "common/enums";
+import { ConflictError } from "errors/conflict-error";
 
 export const getAll = (_req: Request, res: Response, next: NextFunction) =>
   Product.find({})
@@ -19,6 +20,9 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
       res.status(StatusCode.Created).send({ item: product });
     })
     .catch((error) => {
+      if (error instanceof Error && error.message.includes("E11000")) {
+        return next(new ConflictError(error.message));
+      }
       return next(
         new BadRequestError(`Ошибка создания продукта - ${error.message}`)
       );

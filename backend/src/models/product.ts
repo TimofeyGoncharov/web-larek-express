@@ -16,18 +16,18 @@ interface IProduct {
 const productSchema = new Schema<IProduct>({
   title: {
     type: String,
-    required: true,
-    minlength: 2,
-    maxlength: 30,
+    required: [true, "Обязательное поле"],
+    minlength: [2, "Минимальная длина - 2"],
+    maxlength: [30, "Максимальная длина - 30"],
     unique: true,
   },
   image: {
     type: { fileName: String, originalName: String },
-    required: true,
+    required: [true, "Обязательное поле"],
   },
   category: {
     type: String,
-    required: true,
+    required: [true, "Обязательное поле"],
   },
   description: {
     type: String,
