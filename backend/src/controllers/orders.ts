@@ -40,7 +40,7 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
           new BadRequestError("Ошибка! Не совпадает итоговая стоимость товаров")
         );
       }
-      return res.status(StatusCode.Ok).send({ id, total: totalDb });
+      return res.status(StatusCode.Created).send({ id, total: totalDb });
     })
     .catch((error) => next(new BadRequestError(error)));
 };
