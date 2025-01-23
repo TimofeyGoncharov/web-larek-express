@@ -3,6 +3,7 @@ import { faker } from "@faker-js/faker";
 import Product from "../models/product";
 import { BadRequestError } from "../errors/bad-request-error";
 import { StatusCode } from "common/enums";
+import { Error as MongooseError } from "mongoose";
 
 const { ObjectId } = require("mongoose").Types;
 
@@ -42,7 +43,16 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
       }
       return res.status(StatusCode.Created).send({ id, total: totalDb });
     })
-    .catch((error) => next(new BadRequestError(error)));
+    .catch((error) => {
+      if (error instanceof MongooseError.ValidationError) {
+        return next(
+          new BadRequestError(`Ошибка полуения товара - ${error.message}`)
+        );
+      }
+      return next(
+        new BadRequestError(`Ошибка создания товара - ${error.message}`)
+      );
+    });
 };
 
 export default create;

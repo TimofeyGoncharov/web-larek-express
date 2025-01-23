@@ -27,10 +27,8 @@ app.use(requestLogger);
 app.use("/product", productRouter);
 app.use("/order", orderRouter);
 
-app.use("*", (req, res) => {
-  res
-    .status(StatusCode.NotFound)
-    .send({ message: "Запрашиваемый ресурс не найден" });
+app.use("*", (req, res, next) => {
+  return next(new Error("Запрашиваемый ресурс не найден"));
 });
 
 app.use(errors());
