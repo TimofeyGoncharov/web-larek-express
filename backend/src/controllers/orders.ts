@@ -4,6 +4,7 @@ import Product from "../models/product";
 import { BadRequestError } from "../errors/bad-request-error";
 import { StatusCode } from "common/enums";
 import { Error as MongooseError } from "mongoose";
+import { ConflictError } from "errors/conflict-error";
 
 const { ObjectId } = require("mongoose").Types;
 
@@ -44,6 +45,9 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
       return res.status(StatusCode.Created).send({ id, total: totalDb });
     })
     .catch((error) => {
+      if (error instanceof Error && error.message.includes("E11000")) {
+        return next(new ConflictError(error.message));
+      }
       if (error instanceof MongooseError.ValidationError) {
         return next(
           new BadRequestError(`Ошибка полуения товара - ${error.message}`)
